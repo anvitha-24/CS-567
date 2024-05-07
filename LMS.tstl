@@ -1,0 +1,61 @@
+
+import random
+import traceback
+from fuzzingbook.ControlFlow import ControlFlowGraph
+
+# Functions to generate random data for testing
+def random_student():
+    return Student(random.randint(1, 1000), "Student_" + str(random.randint(1, 1000)))
+
+def random_instructor():
+    return Instructor(random.randint(1, 1000), "Instructor_" + str(random.randint(1, 1000)))
+
+def random_course():
+    return Course(random.randint(1, 1000), "Course_" + str(random.randint(1, 1000)), "Description_" + str(random.randint(1, 1000)))
+
+def random_percent():
+    return random.randint(0, 100)
+
+# Define test functions
+def add_student(course, student):
+    try:
+        course.add_student(student)
+    except:
+        traceback.print_exc()
+
+def remove_student(course, student):
+    try:
+        course.remove_student(student)
+    except:
+        traceback.print_exc()
+
+def update_progress(course, student, percent):
+    try:
+        course.update_progress(student, percent)
+    except:
+        traceback.print_exc()
+
+def get_student_progress(course, student):
+    try:
+        progress = course.get_student_progress(student)
+        print(progress)
+    except:
+        traceback.print_exc()
+
+# Initialize the control flow graph
+cfg = ControlFlowGraph()
+
+# Add functions to the control flow graph
+cfg.add_function(add_student)
+cfg.add_function(remove_student)
+cfg.add_function(update_progress)
+cfg.add_function(get_student_progress)
+
+# Define test parameters
+cfg.add_parameter("course", "random_course()")
+cfg.add_parameter("student", "random_student()")
+cfg.add_parameter("percent", "random_percent()")
+
+# Generate and print test cases
+for i in range(20):
+    print(cfg.get_next_parameter_assignment())
